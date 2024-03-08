@@ -6,6 +6,7 @@ import {
   createContact,
   updateContact,
 } from "../controllers/contactsControllers.js";
+import { updateStatusContact } from "../controllers/contactsControllers.js";
 
 const contactsRouter = express.Router();
 
@@ -19,6 +20,6 @@ contactsRouter.post("/", createContact);
 
 contactsRouter.put("/:id", updateContact);
 
-contactsRouter.patch("/:id/favorite", updateContact);
+contactsRouter.patch("/:id/favorite", updateStatusContact);
 
 export default contactsRouter;

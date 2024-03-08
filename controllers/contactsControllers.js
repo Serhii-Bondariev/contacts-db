@@ -3,6 +3,7 @@ import HttpError from "../helpers/HttpError.js";
 import {
   createContactSchema,
   updateContactSchema,
+  favoriteContactSchema,
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res, next) => {
@@ -79,6 +80,10 @@ export const updateContact = async (req, res, next) => {
 
 export const updateStatusContact = async (req, res, next) => {
   try {
+    const { error } = favoriteContactSchema.validate(req.body);
+    if (error) {
+      throw new HttpError(400, error.message);
+    }
     const { id } = req.params;
     const result = await contactsService.updateStatusContact(id, req.body);
     if (!result) {
