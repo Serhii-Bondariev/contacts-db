@@ -1,4 +1,5 @@
 import contactsService from "../services/contactsServices.js";
+
 import HttpError from "../helpers/HttpError.js";
 import {
   createContactSchema,
@@ -80,17 +81,27 @@ export const updateContact = async (req, res, next) => {
 
 export const updateStatusContact = async (req, res, next) => {
   try {
-    const { error } = favoriteContactSchema.validate(req.body);
+    const { id } = req.params;
+    const { favorite } = req.body;
+
+    const { error } = favoriteContactSchema.validate({ favorite });
     if (error) {
       throw new HttpError(400, error.message);
     }
-    const { id } = req.params;
-    const result = await contactsService.updateStatusContact(id, req.body);
+    if (favorite === undefined || typeof favorite !== "boolean") {
+      throw new HttpError(400, "Invalid favorite value");
+    }
+
+    const result = await contactsService.updateStatusContact(id, favorite);
+
     if (!result) {
       throw new HttpError(404, "Not found");
     }
+
     res.json(result);
   } catch (error) {
     next(error);
   }
 };
+
+//contactsControllers.js
